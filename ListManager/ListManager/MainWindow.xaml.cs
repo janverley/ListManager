@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ListManager.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,6 +26,16 @@ namespace ListManager
       InitializeComponent();
 
       DataContext = new ViewModel.MainWindow();
+    }
+
+    private ViewModel.MainWindow ViewModel
+    {
+      get { return DataContext as ViewModel.MainWindow; }
+    }
+
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+      ViewModel.Items.Add(new Item { Name = "added " });
     }
   }
 }

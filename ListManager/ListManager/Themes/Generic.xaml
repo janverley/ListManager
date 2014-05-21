@@ -40,7 +40,7 @@
         <ControlTemplate TargetType="v:ListManager">
           <ListBox
             Focusable="False"
-            ItemsSource="{Binding Items, RelativeSource={RelativeSource TemplatedParent}}"
+            ItemsSource="{Binding TheItems, RelativeSource={RelativeSource TemplatedParent}}"
             SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
             ItemContainerStyle ="{StaticResource ResourceKey=ItemContainerStyle}"
             />

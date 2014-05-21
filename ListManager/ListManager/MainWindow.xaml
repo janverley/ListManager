@@ -11,17 +11,21 @@
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
 
+    <StackPanel Orientation="Vertical" 
+      Grid.Column="0">
+      
     <ListBox
-      Grid.Column="0"
       
       Focusable="False"
       ItemsSource="{Binding Path=Items}"
       ></ListBox>
+      <Button Click="Button_Click">Add 1</Button>
+    </StackPanel>
 
     <v:ListManager
       
       Grid.Column="1"
-        ItemsSource="{Binding Path=Items}"/>
+      ItemsSource="{Binding Path=Items}"/>
 
   </Grid>
 </Window>
