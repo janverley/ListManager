@@ -20,6 +20,7 @@
       ItemsSource="{Binding Path=Items}"
       ></ListBox>
       <Button Click="Button_Click">Add 1</Button>
+      <Button Click="Button_Click_1">Remove 1</Button>
     </StackPanel>
 
     <v:ListManager

@@ -37,5 +37,10 @@ namespace ListManager
     {
       ViewModel.Items.Add(new Item { Name = "added " });
     }
+
+    private void Button_Click_1(object sender, RoutedEventArgs e)
+    {
+      ViewModel.Items.RemoveAt(1);
+    }
   }
 }

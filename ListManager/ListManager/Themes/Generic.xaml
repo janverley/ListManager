@@ -10,8 +10,10 @@
           <Setter Property="Background" Value="Transparent"/>
         </Style>
       </Border.Style>
-    <TextBlock Text="{Binding Path=Name}">
-    </TextBlock>
+      <StackPanel Orientation="Horizontal">
+        <TextBlock Text="{Binding Path=Name}"/>
+        <Button Command="{Binding Path=DeleteCommand}"/>
+      </StackPanel>
     </Border>
     <DataTemplate.Triggers>
       <DataTrigger Binding="{Binding Path=IsCurrent}" Value="True">
