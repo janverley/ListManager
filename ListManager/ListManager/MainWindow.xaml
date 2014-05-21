@@ -3,12 +3,14 @@
         xmlns:v="clr-namespace:ListManager.View"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
-    <Grid>
+  <Window.Resources>
+  </Window.Resources>
+  <Grid>
     <Grid.ColumnDefinitions>
       <ColumnDefinition/>
       <ColumnDefinition/>
     </Grid.ColumnDefinitions>
-      
+
     <ListBox
       Grid.Column="0"
       

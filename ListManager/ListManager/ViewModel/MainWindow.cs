@@ -14,6 +14,7 @@ namespace ListManager.ViewModel
       items = new List{
         new Item{Name="Default"},
         new Item{Name="Item1"},
+        new Item{Name="Item1"},
       };
     }
 
