@@ -23,6 +23,8 @@ namespace ListManager
     public MainWindow()
     {
       InitializeComponent();
+
+      DataContext = new ViewModel.MainWindow();
     }
   }
 }

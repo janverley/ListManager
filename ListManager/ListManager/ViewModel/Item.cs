@@ -8,7 +8,7 @@ using System.Windows.Input;
 
 namespace ListManager.ViewModel
 {
-  class Item : INotifyPropertyChanged
+  public class Item : INotifyPropertyChanged
   {
     private string name;
 

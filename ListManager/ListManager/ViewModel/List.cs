@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 
 namespace ListManager.ViewModel
 {
-  class List : INotifyCollectionChanged, INotifyPropertyChanged
+  public class List : ObservableCollection<Item>
   {
-    public event PropertyChangedEventHandler PropertyChanged = delegate { };
-    public event NotifyCollectionChangedEventHandler CollectionChanged = delegate { };
   }
 }
