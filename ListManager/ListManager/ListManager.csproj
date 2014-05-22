@@ -60,9 +60,12 @@
     <Compile Include="ViewModel\MainWindow.cs" />
     <Compile Include="ViewModel\RenamableNotificationObject.cs" />
     <Compile Include="View\BooleanToCursorConverter.cs" />
+    <Compile Include="View\DragDropHelper.cs" />
+    <Compile Include="View\InsertionAdorner.cs" />
     <Compile Include="View\ListManager.cs" />
     <Compile Include="ViewModel\PlaceHolder.cs" />
     <Compile Include="View\RenamableControl.cs" />
+    <Compile Include="View\Utilities.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
