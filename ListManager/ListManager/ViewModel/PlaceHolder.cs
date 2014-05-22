@@ -10,12 +10,12 @@ namespace ListManager.ViewModel
 {
   class PlaceHolder : Item
   {
-    public PlaceHolder(Action<string> OnAcceptNewName)
-      : base("Click to add...", true, () => false)
+    public PlaceHolder(Action<string> onAcceptNewName)
+      : base("Click to add...", true)
     {
       CanDelete = false;
       Name.IsRenamable = true;
-      Name.AcceptNewNameCmd = new DelegateCommand<string>(newName => OnAcceptNewName(newName));
+      Name.AcceptNewNameCmd = new DelegateCommand<string>(newName => onAcceptNewName(newName));
     }
   }
 }

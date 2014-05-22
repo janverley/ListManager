@@ -35,7 +35,7 @@ namespace ListManager
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items.Add(new Item("added", true, ()=>false));
+      ViewModel.Items.Add(new Item("added", true));
     }
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -59,7 +59,10 @@ namespace ListManager
 
     private void Button_Click_4(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;
+      if (ViewModel.Items.Any(i => i.IsCurrent))
+      {
+        ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;        
+      }
     }
   }
 }

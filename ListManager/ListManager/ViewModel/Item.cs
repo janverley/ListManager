@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using Lms.ViewModel.Infrastructure.RenamableControl;
 using Microsoft.Practices.Prism.Commands;
@@ -12,13 +8,19 @@ namespace ListManager.ViewModel
 {
   public class Item : INotifyPropertyChanged
   {
+    public Item(string name, bool canRename)
+      : this(name, canRename, () => true)
+    { }
+
     public Item(string name, bool canRename, Func<bool> onSave)
     {
       saveCommand = new DelegateCommand(()=>
         { 
-          IsDirty = onSave();
+          IsDirty = !onSave();
         }, () => IsDirty);
+      
       this.canRename = canRename;
+
       Name = new RenamableNotificationObject(name, name, false);
     }
 
@@ -57,9 +59,14 @@ namespace ListManager.ViewModel
           {
             IsDirty = false;
           }
-          Name.IsRenamable = IsCurrent && canRename && !IsDirty;
+          EvaluateRenamable();
         }
       }
+    }
+
+    private void EvaluateRenamable()
+    {
+      Name.IsRenamable = IsCurrent && canRename && !IsDirty;
     }
 
     private bool canDelete = true;
@@ -88,9 +95,9 @@ namespace ListManager.ViewModel
         {
           isDirty = value;
           PropertyChanged(this, new PropertyChangedEventArgs("IsDirty"));
-          saveCommand.RaiseCanExecuteChanged();
 
-          Name.IsRenamable = IsCurrent && canRename && !IsDirty;
+          saveCommand.RaiseCanExecuteChanged();
+          EvaluateRenamable();
         }
       }
     }

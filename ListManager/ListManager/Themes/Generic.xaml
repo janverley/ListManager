@@ -54,7 +54,7 @@
           <ListBox
             Focusable="False"
             ItemsSource="{Binding InternalItems, RelativeSource={RelativeSource TemplatedParent}}"
-            SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
+            SelectedItem="{Binding InternalItems.SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
             ItemContainerStyle ="{StaticResource ResourceKey=ItemContainerStyle}"
             />
         </ControlTemplate>
