@@ -9,9 +9,6 @@ using System.Collections.Specialized;
 
 namespace ListManager.View
 {
-  /// <summary>
-  /// Interaction logic for ListManager.xaml
-  /// </summary>
   public class ListManager : Selector
   {
     static ListManager()

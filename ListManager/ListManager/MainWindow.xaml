@@ -1,6 +1,7 @@
 ﻿<Window x:Class="ListManager.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:v="clr-namespace:ListManager.View"
+        xmlns:vm="clr-namespace:ListManager.ViewModel"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
   <Window.Resources>
@@ -15,10 +16,20 @@
       Grid.Column="0">
       
     <ListBox
-      
       Focusable="False"
       ItemsSource="{Binding Path=Items}"
-      ></ListBox>
+      >
+        <ListBox.ItemTemplate>
+          <DataTemplate DataType="vm:Item">
+            <StackPanel Orientation="Horizontal">
+              <TextBlock Text="{Binding Path=Name.Name}"/>
+              <TextBlock Text="{Binding Path=IsCurrent}"/>
+              <TextBlock Text="{Binding Path=CanDelete}"/>
+            </StackPanel>
+          </DataTemplate>
+        </ListBox.ItemTemplate>
+      
+    </ListBox>
       <Button Click="Button_Click">Add 1</Button>
       <Button Click="Button_Click_1">Remove 1</Button>
     </StackPanel>

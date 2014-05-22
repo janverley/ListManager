@@ -37,7 +37,7 @@ namespace ListManager.ViewModel
       {
         Add(item);
       }
-      Add(new PlaceHolder());
+      Add(new PlaceHolder(newName => OnAdd(newName)));
     }
 
     public ICommand DeleteCommand { get { return deleteCommand; } }
@@ -49,13 +49,18 @@ namespace ListManager.ViewModel
       if (item != null)
       {
         externalItems.Remove(item);
-        Remove(item);        
       }
     }
 
     private bool CanDelete(Item item)
     {
       return item != null && Contains(item) && item.CanDelete;
+    }
+
+    private void OnAdd(string newName)
+    {
+      var newItem = new Item(newName, true);
+      externalItems.Add(newItem);
     }
 
     public void Dispose()

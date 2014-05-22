@@ -48,15 +48,8 @@ namespace ListManager.ViewModel
         {
           isCurrent = value;
           PropertyChanged(this, new PropertyChangedEventArgs("IsCurrent"));
-        }
 
-        if (IsCurrent)
-        {
-          Name.IsRenamable = canRename;
-        }
-        else
-        {
-          Name.IsRenamable = false;
+          Name.IsRenamable = IsCurrent && canRename;
         }
       }
     }
