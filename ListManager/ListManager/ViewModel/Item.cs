@@ -12,8 +12,12 @@ namespace ListManager.ViewModel
 {
   public class Item : INotifyPropertyChanged
   {
-    public Item(string name, bool canRename)
+    public Item(string name, bool canRename, Func<bool> onSave)
     {
+      saveCommand = new DelegateCommand(()=>
+        { 
+          IsDirty = onSave();
+        }, () => IsDirty);
       this.canRename = canRename;
       Name = new RenamableNotificationObject(name, name, false);
     }
@@ -49,7 +53,11 @@ namespace ListManager.ViewModel
           isCurrent = value;
           PropertyChanged(this, new PropertyChangedEventArgs("IsCurrent"));
 
-          Name.IsRenamable = IsCurrent && canRename;
+          if (!IsCurrent)
+          {
+            IsDirty = false;
+          }
+          Name.IsRenamable = IsCurrent && canRename && !IsDirty;
         }
       }
     }
@@ -68,6 +76,27 @@ namespace ListManager.ViewModel
         }
       }
     }
+
+    private bool isDirty;
+
+    public bool IsDirty
+    {
+      get { return isDirty; }
+      set
+      {
+        if (!Equals(isDirty, value))
+        {
+          isDirty = value;
+          PropertyChanged(this, new PropertyChangedEventArgs("IsDirty"));
+          saveCommand.RaiseCanExecuteChanged();
+
+          Name.IsRenamable = IsCurrent && canRename && !IsDirty;
+        }
+      }
+    }
+
+    public ICommand SaveCommand { get { return saveCommand; } }
+    private DelegateCommand saveCommand;
 
     public event PropertyChangedEventHandler PropertyChanged = delegate { };
   }

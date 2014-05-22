@@ -23,8 +23,14 @@
           <DataTemplate DataType="vm:Item">
             <StackPanel Orientation="Horizontal">
               <TextBlock Text="{Binding Path=Name.Name}"/>
+              <TextBlock Text=" C: "/>
               <TextBlock Text="{Binding Path=IsCurrent}"/>
+              <TextBlock Text=" F: "/>
+              <TextBlock Text="{Binding Path=IsFavorite}"/>
+              <TextBlock Text=" D: "/>
               <TextBlock Text="{Binding Path=CanDelete}"/>
+              <TextBlock Text=" Dirt: "/>
+              <TextBlock Text="{Binding Path=IsDirty}"/>
             </StackPanel>
           </DataTemplate>
         </ListBox.ItemTemplate>
@@ -32,6 +38,9 @@
     </ListBox>
       <Button Click="Button_Click">Add 1</Button>
       <Button Click="Button_Click_1">Remove 1</Button>
+      <Button Click="Button_Click_2">Flip fav van #2</Button>
+      <Button Click="Button_Click_3">make none current</Button>
+      <Button Click="Button_Click_4">make current dirty</Button>
     </StackPanel>
 
     <v:ListManager

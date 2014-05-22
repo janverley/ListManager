@@ -59,7 +59,7 @@ namespace ListManager.ViewModel
 
     private void OnAdd(string newName)
     {
-      var newItem = new Item(newName, true);
+      var newItem = new Item(newName, true, () => false);
       externalItems.Add(newItem);
     }
 

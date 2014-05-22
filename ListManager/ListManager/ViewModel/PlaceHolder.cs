@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 
-namespace ListManager.View
+namespace ListManager.ViewModel
 {
   class PlaceHolder : Item
   {
     public PlaceHolder(Action<string> OnAcceptNewName)
-      : base("Click to add...", true)
+      : base("Click to add...", true, () => false)
     {
       CanDelete = false;
       Name.IsRenamable = true;

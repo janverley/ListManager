@@ -35,12 +35,31 @@ namespace ListManager
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items.Add(new Item("added", true));
+      ViewModel.Items.Add(new Item("added", true, ()=>false));
     }
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
       ViewModel.Items.RemoveAt(1);
+    }
+
+    private void Button_Click_2(object sender, RoutedEventArgs e)
+    {
+      ViewModel.Items[1].IsFavorite = !ViewModel.Items[1].IsFavorite;
+
+    }
+
+    private void Button_Click_3(object sender, RoutedEventArgs e)
+    {
+      foreach (var item in ViewModel.Items)
+      {
+        item.IsCurrent = false;
+      }
+    }
+
+    private void Button_Click_4(object sender, RoutedEventArgs e)
+    {
+      ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;
     }
   }
 }

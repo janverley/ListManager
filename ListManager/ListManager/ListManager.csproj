@@ -62,7 +62,7 @@
     <Compile Include="ViewModel\RenamableNotificationObject.cs" />
     <Compile Include="View\BooleanToCursorConverter.cs" />
     <Compile Include="View\ListManager.cs" />
-    <Compile Include="View\PlaceHolder.cs" />
+    <Compile Include="ViewModel\PlaceHolder.cs" />
     <Compile Include="View\RenamableControl.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
