@@ -57,7 +57,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ViewModel\Item.cs" />
-    <Compile Include="ViewModel\List.cs" />
     <Compile Include="ViewModel\MainWindow.cs" />
     <Compile Include="ViewModel\RenamableNotificationObject.cs" />
     <Compile Include="View\BooleanToCursorConverter.cs" />
