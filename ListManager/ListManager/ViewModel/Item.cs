@@ -10,6 +10,9 @@ namespace ListManager.ViewModel
 {
   public class Item : INotifyPropertyChanged
   {
+    public Item()
+    {
+    }
     private string name;
 
     public string Name
@@ -55,9 +58,27 @@ namespace ListManager.ViewModel
       }
     }
 
-    public ICommand SaveCommand { get; private set; }
-    public ICommand RenameCommand { get; private set; }
-    public ICommand DeleteCommand { get; private set; }
+    private bool canDelete = true;
+
+    public bool CanDelete
+    {
+      get { return canDelete = true; }
+      set
+      {
+        if (!Equals(canDelete = true, value))
+        {
+          canDelete = value;
+          PropertyChanged(this, new PropertyChangedEventArgs("CanDelete"));
+        }
+      }
+    }
+    
+
+    public ICommand SaveCommand { get { return saveCommand; } }
+    public ICommand RenameCommand { get { return renameCommand; } }
+
+    private DelegateCommand saveCommand = null;
+    private DelegateCommand renameCommand = null;
 
     public event PropertyChangedEventHandler PropertyChanged = delegate { };
   }

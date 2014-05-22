@@ -3,6 +3,9 @@ using System.Windows;
 using System.Windows.Controls;
 using ListManager.ViewModel;
 using System.Windows.Controls.Primitives;
+using System.Collections.Generic;
+using System;
+using System.Collections.Specialized;
 
 namespace ListManager.View
 {
@@ -18,29 +21,65 @@ namespace ListManager.View
       ItemsSourceProperty.OverrideMetadata(typeof(ListManager), new FrameworkPropertyMetadata(OnItemsSourceChanged));
     }
 
-
-    public List TheItems
+    public ListManager()
     {
-      get { return (List)GetValue(TheItemsProperty); }
-      set { SetValue(TheItemsProperty, value); }
+      InternalItems.CollectionChanged += InternalItems_CollectionChanged;
     }
 
-    // Using a DependencyProperty as the backing store for MyProperty.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty TheItemsProperty =
-        DependencyProperty.Register("TheItems", typeof(List), typeof(ListManager), new PropertyMetadata(new List()));
+    void InternalItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    {
+      FromUI = true;
 
+      var o = ItemsSource as Collection<Item>;
+      if (o != null)
+      {
+        switch (e.Action)
+        {
+          case System.Collections.Specialized.NotifyCollectionChangedAction.Add:
+            foreach (var item in e.NewItems)
+            {
+              o.Add(item as Item);              
+            }
+            break;
+          case System.Collections.Specialized.NotifyCollectionChangedAction.Move:
+            throw new NotImplementedException();
+            break;
+          case System.Collections.Specialized.NotifyCollectionChangedAction.Remove:
+            foreach (var item in e.OldItems)
+            {
+              o.Remove(item as Item);
+            }
+            break;
+          case System.Collections.Specialized.NotifyCollectionChangedAction.Replace:
+            throw new NotImplementedException();
+            break;
+          case System.Collections.Specialized.NotifyCollectionChangedAction.Reset:
+            o.Clear();
+            foreach (var item in InternalItems)
+            {
+              o.Add(item);
+            }
+            break;
+          default:
+            break;
+        }
+      }
 
+      FromUI = false;
+    }
 
-    //public Item MyItem
-    //{
-    //  get { return (Item)GetValue(MyItemProperty); }
-    //  set { SetValue(MyItemProperty, value); }
-    //}
+    private bool fromModel;
+    private bool FromUI;
 
-    //// Using a DependencyProperty as the backing store for SelectedItem.  This enables animation, styling, binding, etc...
-    //public static readonly DependencyProperty MyItemProperty =
-    //    DependencyProperty.Register("MyItem", typeof(Item), typeof(ListManager), new FrameworkPropertyMetadata(OnSelectedItemChanged));
+    public List InternalItems
+    {
+      get { return (List)GetValue(InternalItemsProperty); }
+      set { SetValue(InternalItemsProperty, value); }
+    }
 
+    public static readonly DependencyProperty InternalItemsProperty =
+        DependencyProperty.Register("InternalItems", typeof(List), typeof(ListManager), new PropertyMetadata(new List()));
+    
     private static void OnSelectedItemChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       var o = e.OldValue as Item;
@@ -59,31 +98,31 @@ namespace ListManager.View
     private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       var lm = d as ListManager;
-      var o = e.OldValue as List;
+      var o = e.OldValue as INotifyCollectionChanged;
       if (o != null)
       {
         o.CollectionChanged -= lm.OnItemsChanged;
       }
 
-      var i = e.NewValue as List;
+      var i = e.NewValue as INotifyCollectionChanged;
       if (i != null)
       {
         i.CollectionChanged += lm.OnItemsChanged;
-        lm.BuildTheItems();
+        lm.BuildInternalItems();
       }
     }
 
-    private void BuildTheItems()
+    private void BuildInternalItems()
     {
       var currentSelectedItem = SelectedItem as Item;
-      TheItems.Clear();
+      InternalItems.Clear();
       foreach (var item in Items)
       {
-        TheItems.Add(item as Item);
+        InternalItems.Add(item as Item);
       }
-      TheItems.Add(new Item { Name = "Click to add..." });
+      InternalItems.Add(new PlaceHolder());
 
-      if (currentSelectedItem != null && TheItems.Contains(currentSelectedItem))
+      if (currentSelectedItem != null && InternalItems.Contains(currentSelectedItem))
       {
         SelectedItem = currentSelectedItem;
       }
@@ -91,7 +130,8 @@ namespace ListManager.View
 
     private void OnItemsChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-      BuildTheItems();
+      if (FromUI) return;
+      BuildInternalItems();
     }
   }
 }

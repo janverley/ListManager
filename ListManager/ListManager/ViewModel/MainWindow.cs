@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ListManager.ViewModel
 {
@@ -11,16 +7,16 @@ namespace ListManager.ViewModel
   {
     public MainWindow()
     {
-      items = new List{
-        new Item{Name="Default"},
+      items = new ObservableCollection<Item>{
+        new Item{Name="Default" ,CanDelete = false},
         new Item{Name="Item1"},
         new Item{Name="Item1"},
       };
     }
 
-    private List items;
+    private ObservableCollection<Item> items;
 
-    public List Items
+    public ObservableCollection<Item> Items
     {
       get { return items; }
       private set { items = value; }

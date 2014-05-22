@@ -53,10 +53,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\Item.cs" />
     <Compile Include="ViewModel\List.cs" />
     <Compile Include="ViewModel\MainWindow.cs" />
     <Compile Include="View\ListManager.cs" />
+    <Compile Include="View\PlaceHolder.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
