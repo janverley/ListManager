@@ -62,10 +62,10 @@ namespace ListManager.ViewModel
 
     public bool CanDelete
     {
-      get { return canDelete = true; }
+      get { return canDelete; }
       set
       {
-        if (!Equals(canDelete = true, value))
+        if (!Equals(canDelete, value))
         {
           canDelete = value;
           PropertyChanged(this, new PropertyChangedEventArgs("CanDelete"));
