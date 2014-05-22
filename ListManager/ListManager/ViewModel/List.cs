@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ListManager.View;
+using Microsoft.Practices.Prism.Commands;
 
 namespace ListManager.ViewModel
 {
@@ -19,7 +20,7 @@ namespace ListManager.ViewModel
       this.externalItems = externalItems;
       BuildInternalItems();
       externalItems.CollectionChanged += externalItems_CollectionChanged;
-      deleteCommand = new DelegateCommand(DoDelete, CanDelete);
+      deleteCommand = new DelegateCommand<Item>(DoDelete, CanDelete);
     }
 
     void externalItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -40,12 +41,11 @@ namespace ListManager.ViewModel
     }
 
     public ICommand DeleteCommand { get { return deleteCommand; } }
-    private DelegateCommand deleteCommand;
+    private DelegateCommand<Item> deleteCommand;
     private ObservableCollection<Item> externalItems;
 
-    private void DoDelete(object parameter)
+    private void DoDelete(Item item)
     {
-      var item = parameter as Item;
       if (item != null)
       {
         externalItems.Remove(item);
@@ -53,9 +53,8 @@ namespace ListManager.ViewModel
       }
     }
 
-    private bool CanDelete(object parameter)
+    private bool CanDelete(Item item)
     {
-      var item = parameter as Item;
       return item != null && Contains(item) && item.CanDelete;
     }
 

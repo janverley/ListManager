@@ -5,28 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Lms.ViewModel.Infrastructure.RenamableControl;
+using Microsoft.Practices.Prism.Commands;
 
 namespace ListManager.ViewModel
 {
   public class Item : INotifyPropertyChanged
   {
-    public Item()
+    public Item(string name, bool canRename)
     {
+      this.canRename = canRename;
+      Name = new RenamableNotificationObject(name, name, false);
     }
-    private string name;
 
-    public string Name
-    {
-      get { return name; }
-      set
-      {
-        if (!Equals(name, value))
-        {
-          name = value;
-          PropertyChanged(this, new PropertyChangedEventArgs("Name"));
-        }
-      }
-    }
+    public RenamableNotificationObject Name { get; set; }
+
+    private bool canRename;
 
     private bool isFavorite;
 
@@ -55,6 +49,15 @@ namespace ListManager.ViewModel
           isCurrent = value;
           PropertyChanged(this, new PropertyChangedEventArgs("IsCurrent"));
         }
+
+        if (IsCurrent)
+        {
+          Name.IsRenamable = canRename;
+        }
+        else
+        {
+          Name.IsRenamable = false;
+        }
       }
     }
 
@@ -72,13 +75,6 @@ namespace ListManager.ViewModel
         }
       }
     }
-    
-
-    public ICommand SaveCommand { get { return saveCommand; } }
-    public ICommand RenameCommand { get { return renameCommand; } }
-
-    private DelegateCommand saveCommand = null;
-    private DelegateCommand renameCommand = null;
 
     public event PropertyChangedEventHandler PropertyChanged = delegate { };
   }

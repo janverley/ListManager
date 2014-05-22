@@ -8,9 +8,9 @@ namespace ListManager.ViewModel
     public MainWindow()
     {
       items = new ObservableCollection<Item>{
-        new Item{Name="Default" ,CanDelete = false},
-        new Item{Name="Item1"},
-        new Item{Name="Item1"},
+        new Item("Default", false){CanDelete = false},
+        new Item("Item1", true),
+        new Item("Item1", true),
       };
     }
 

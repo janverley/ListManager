@@ -10,11 +10,9 @@ namespace ListManager.View
   class PlaceHolder : Item
   {
     public PlaceHolder()
+      :base("Click to add...",true)
     {
-      Name = "Click to add...";
       CanDelete = false;
-      
-
     }
   }
 }

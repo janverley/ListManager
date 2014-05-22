@@ -35,7 +35,7 @@ namespace ListManager
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items.Add(new Item { Name = "added " });
+      ViewModel.Items.Add(new Item("added", true));
     }
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
