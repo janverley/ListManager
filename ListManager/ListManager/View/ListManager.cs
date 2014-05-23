@@ -62,6 +62,7 @@ namespace ListManager.View
         }
         else
         {
+          SelectedItem = item; // Selection was lost when the item was removed
           externalItems.Insert(index, item);
         }
       }
