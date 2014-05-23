@@ -9,22 +9,37 @@ namespace ListManager.ViewModel
   public class Item : INotifyPropertyChanged
   {
     public Item(string name, bool canRename)
-      : this(name, canRename, () => true)
+      : this(name, canRename, (_) => true, null)
     { }
 
-    public Item(string name, bool canRename, Func<bool> onSave)
+    public Item(string name, bool canRename, Func<Item, bool> onSave)
+      : this(name, canRename, onSave, null)
+    { }
+
+    public Item(string name, bool canRename, Func<Item, bool> onSave, Action<Item, string> onNewName)
     {
-      saveCommand = new DelegateCommand(()=>
-        { 
-          IsDirty = !onSave();
+      saveCommand = new DelegateCommand(() =>
+        {
+          IsDirty = !onSave(this);
         }, () => IsDirty);
-      
+
       this.canRename = canRename;
 
-      Name = new RenamableNotificationObject(name, name, false);
+      RenameObject = new RenamableNotificationObject(name, name, false);
+      if (onNewName != null)
+      {
+        RenameObject.AcceptNewNameCmd = new DelegateCommand<string>((newName) =>
+          onNewName(this, newName));
+      }
     }
 
-    public RenamableNotificationObject Name { get; set; }
+    public RenamableNotificationObject RenameObject { get; set; }
+
+    public string Name
+    {
+      get { return RenameObject.Name; }
+      set { RenameObject.Name = value; }
+    }
 
     private bool canRename;
 
@@ -66,7 +81,7 @@ namespace ListManager.ViewModel
 
     private void EvaluateRenamable()
     {
-      Name.IsRenamable = IsCurrent && canRename && !IsDirty;
+      RenameObject.IsRenamable = IsCurrent && canRename && !IsDirty;
     }
 
     private bool canDelete = true;

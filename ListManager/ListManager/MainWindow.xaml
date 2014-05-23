@@ -24,7 +24,7 @@
         <ListBox.ItemTemplate>
           <DataTemplate DataType="vm:Item">
             <StackPanel Orientation="Horizontal">
-              <TextBlock Text="{Binding Path=Name.Name}"/>
+              <TextBlock Text="{Binding Path=RenameObject.Name}"/>
               <TextBlock Text=" C: "/>
               <TextBlock Text="{Binding Path=IsCurrent}"/>
               <TextBlock Text=" F: "/>

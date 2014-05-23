@@ -14,8 +14,8 @@ namespace ListManager.ViewModel
       : base("Click to add...", true)
     {
       CanDelete = false;
-      Name.IsRenamable = true;
-      Name.AcceptNewNameCmd = new DelegateCommand<string>(newName => onAcceptNewName(newName));
+      RenameObject.IsRenamable = true;
+      RenameObject.AcceptNewNameCmd = new DelegateCommand<string>(newName => onAcceptNewName(newName));
     }
   }
 }
