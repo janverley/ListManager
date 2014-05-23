@@ -31,7 +31,8 @@
   </DataTemplate>
 
   <DataTemplate DataType="{x:Type vm:PlaceHolder}">
-    <StackPanel Orientation="Horizontal">
+    <StackPanel Orientation="Horizontal"
+                >
       <renamableControl:RenamableControl DataContext="{Binding Path=Name}"/>
     </StackPanel>
   </DataTemplate>
@@ -52,31 +53,13 @@
     <Setter Property="Template">
       <Setter.Value>
         <ControlTemplate TargetType="v:ListManager">
-          <!--v1:DragDropHelper.IsDragSource="True" 
-                           v1:DragDropHelper.IsDropTarget="True" 
-                  v1:DragDropHelper.Helper="{StaticResource dragDropHelper}"-->
           <ListBox
             v1:DragDropHelper.IsDragSource="True"
             v1:DragDropHelper.IsDropTarget="True"
             Focusable="False"
             ItemsSource="{Binding InternalItems, RelativeSource={RelativeSource TemplatedParent}}"
             SelectedItem="{Binding InternalItems.SelectedItem, RelativeSource={RelativeSource TemplatedParent}}"
-            ItemContainerStyle ="{StaticResource ResourceKey=ItemContainerStyle}"
->
-            <!--<ListBox.Template>
-              <ControlTemplate TargetType="ListBox">
-                <Border >
-                  <StackPanel Orientation="Vertical" IsItemsHost="True"/>
-                </Border>
-              </ControlTemplate>
-            </ListBox.Template>-->
-
-            <!--<ListBox.ItemTemplate>
-              <DataTemplate>
-                <TextBlock Text="{Binding Path=Name.Name}"/>
-              </DataTemplate>
-            </ListBox.ItemTemplate>-->
-
+            ItemContainerStyle ="{StaticResource ResourceKey=ItemContainerStyle}">
           </ListBox>
         </ControlTemplate>
       </Setter.Value>

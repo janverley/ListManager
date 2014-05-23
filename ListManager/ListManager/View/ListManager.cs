@@ -42,6 +42,30 @@ namespace ListManager.View
 
     public class List : ObservableCollection<Item>, IDisposable
     {
+      protected override void RemoveItem(int index)
+      {
+        if (buildingInternalItems)
+        {
+          base.RemoveItem(index);
+        }
+        else
+        {
+          externalItems.RemoveAt(index);
+        }
+      }
+
+      protected override void InsertItem(int index, Item item)
+      {
+        if (buildingInternalItems)
+        {
+          base.InsertItem(index, item);
+        }
+        else
+        {
+          externalItems.Insert(index, item);
+        }
+      }
+
       public List(ObservableCollection<Item> externalItems)
       {
         this.externalItems = externalItems;
@@ -56,8 +80,11 @@ namespace ListManager.View
         BuildInternalItems();
       }
 
+      private bool buildingInternalItems = false;
+
       private void BuildInternalItems()
       {
+        buildingInternalItems = true;
         var currentSelectedItem = SelectedItem;
         Clear();
 
@@ -70,8 +97,9 @@ namespace ListManager.View
 
         if (Contains(currentSelectedItem))
         {
-          SelectedItem = currentSelectedItem;          
+          SelectedItem = currentSelectedItem;
         }
+        buildingInternalItems = false;
       }
 
       public ICommand DeleteCommand { get { return deleteCommand; } }
