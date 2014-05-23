@@ -6,7 +6,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
   <Window.Resources>
-    <v1:DragDropHelper x:Key="dragDropHelper"/>
+
   </Window.Resources>
   <Grid>
     <Grid.ColumnDefinitions>
@@ -46,9 +46,6 @@
     </StackPanel>
 
     <v:ListManager
-      v1:DragDropHelper.Helper="{StaticResource dragDropHelper}"
-                           v1:DragDropHelper.IsDragSource="true" 
-                           v1:DragDropHelper.IsDropTarget="true" 
       Grid.Column="1"
       ItemsSource="{Binding Path=Items}"/>
 

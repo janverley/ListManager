@@ -10,13 +10,7 @@ namespace Lms.View.DataSelection.Pivot
 {
   public class DragDropHelper
   {
-    public DragDropHelper()
-    {
-      format = DataFormats.GetDataFormat(GetHashCode().ToString());
-    }
-
     // source and target
-    private DataFormat format;
     private Point initialMousePosition;
     private Vector initialMouseOffset;
     private object draggedData;
@@ -30,7 +24,33 @@ namespace Lms.View.DataSelection.Pivot
     private FrameworkElement targetItemContainer;
     private int insertionIndex;
     private bool isInFirstHalf;
+    // singleton
+    private static DragDropHelper instance;
+    private static DragDropHelper Instance
+    {
+      get
+      {
+        if (instance == null)
+        {
+          instance = new DragDropHelper();
+        }
+        return instance;
+      }
+    }
 
+    public static string GetInstanceId(DependencyObject obj)
+    {
+      return (string)obj.GetValue(InstanceIdProperty);
+    }
+
+    public static void SetInstanceId(DependencyObject obj, string value)
+    {
+      obj.SetValue(InstanceIdProperty, value);
+    }
+
+    public static readonly DependencyProperty InstanceIdProperty =
+      DependencyProperty.RegisterAttached("InstanceId", typeof(string), typeof(DragDropHelper), new UIPropertyMetadata("1"));
+    
     public static bool GetIsDragSource(DependencyObject obj)
     {
       return (bool)obj.GetValue(IsDragSourceProperty);
@@ -55,19 +75,6 @@ namespace Lms.View.DataSelection.Pivot
     {
       obj.SetValue(IsBeingDraggedProperty, value);
     }
-
-    public static DragDropHelper GetHelper(DependencyObject obj)
-    {
-      return (DragDropHelper)obj.GetValue(HelperProperty);
-    }
-
-    public static void SetHelper(DependencyObject obj, DragDropHelper value)
-    {
-      obj.SetValue(HelperProperty, value);
-    }
-
-    public static readonly DependencyProperty HelperProperty =
-      DependencyProperty.RegisterAttached("Helper", typeof(DragDropHelper), typeof(DragDropHelper));
 
     public static bool GetIsDropTarget(DependencyObject obj)
     {
@@ -102,15 +109,15 @@ namespace Lms.View.DataSelection.Pivot
       {
         if (Object.Equals(e.NewValue, true))
         {
-          dragSource.PreviewMouseLeftButtonDown += GetHelper(obj).DragSource_PreviewMouseLeftButtonDown;
-          dragSource.PreviewMouseLeftButtonUp += GetHelper(obj).DragSource_PreviewMouseLeftButtonUp;
-          dragSource.PreviewMouseMove += GetHelper(obj).DragSource_PreviewMouseMove;
+          dragSource.PreviewMouseLeftButtonDown += Instance.DragSource_PreviewMouseLeftButtonDown;
+          dragSource.PreviewMouseLeftButtonUp += Instance.DragSource_PreviewMouseLeftButtonUp;
+          dragSource.PreviewMouseMove += Instance.DragSource_PreviewMouseMove;
         }
         else
         {
-          dragSource.PreviewMouseLeftButtonDown -= GetHelper(obj).DragSource_PreviewMouseLeftButtonDown;
-          dragSource.PreviewMouseLeftButtonUp -= GetHelper(obj).DragSource_PreviewMouseLeftButtonUp;
-          dragSource.PreviewMouseMove -= GetHelper(obj).DragSource_PreviewMouseMove;
+          dragSource.PreviewMouseLeftButtonDown -= Instance.DragSource_PreviewMouseLeftButtonDown;
+          dragSource.PreviewMouseLeftButtonUp -= Instance.DragSource_PreviewMouseLeftButtonUp;
+          dragSource.PreviewMouseMove -= Instance.DragSource_PreviewMouseMove;
         }
       }
     }
@@ -123,18 +130,18 @@ namespace Lms.View.DataSelection.Pivot
         if (Object.Equals(e.NewValue, true))
         {
           dropTarget.AllowDrop = true;
-          dropTarget.PreviewDrop += GetHelper(obj).DropTarget_PreviewDrop;
-          dropTarget.PreviewDragEnter += GetHelper(obj).DropTarget_PreviewDragEnter;
-          dropTarget.PreviewDragOver += GetHelper(obj).DropTarget_PreviewDragOver;
-          dropTarget.PreviewDragLeave += GetHelper(obj).DropTarget_PreviewDragLeave;
+          dropTarget.PreviewDrop += Instance.DropTarget_PreviewDrop;
+          dropTarget.PreviewDragEnter += Instance.DropTarget_PreviewDragEnter;
+          dropTarget.PreviewDragOver += Instance.DropTarget_PreviewDragOver;
+          dropTarget.PreviewDragLeave += Instance.DropTarget_PreviewDragLeave;
         }
         else
         {
           dropTarget.AllowDrop = false;
-          dropTarget.PreviewDrop -= GetHelper(obj).DropTarget_PreviewDrop;
-          dropTarget.PreviewDragEnter -= GetHelper(obj).DropTarget_PreviewDragEnter;
-          dropTarget.PreviewDragOver -= GetHelper(obj).DropTarget_PreviewDragOver;
-          dropTarget.PreviewDragLeave -= GetHelper(obj).DropTarget_PreviewDragLeave;
+          dropTarget.PreviewDrop -= Instance.DropTarget_PreviewDrop;
+          dropTarget.PreviewDragEnter -= Instance.DropTarget_PreviewDragEnter;
+          dropTarget.PreviewDragOver -= Instance.DropTarget_PreviewDragOver;
+          dropTarget.PreviewDragLeave -= Instance.DropTarget_PreviewDragLeave;
         }
       }
     }
@@ -168,7 +175,7 @@ namespace Lms.View.DataSelection.Pivot
 
           this.initialMouseOffset = this.initialMousePosition - this.sourceItemContainer.TranslatePoint(new Point(0, 0), this.topWindow);
 
-          DataObject data = new DataObject(this.format.Name, this.draggedData);
+          DataObject data = new DataObject(GetInstanceId(sender as DependencyObject), this.draggedData);
 
           // Adding events to the window to make sure dragged adorner comes up when mouse is not over a drop target.
           bool previousAllowDrop = this.topWindow.AllowDrop;
@@ -206,7 +213,7 @@ namespace Lms.View.DataSelection.Pivot
     {
       this.targetItemsControl = (ItemsControl)sender;
 
-      object draggedItem = e.Data.GetData(this.format.Name);
+      object draggedItem = e.Data.GetData(GetInstanceId(this.targetItemsControl));
 
       DecideDropTarget(e);
       if (draggedItem != null)
@@ -218,7 +225,7 @@ namespace Lms.View.DataSelection.Pivot
 
     private void DropTarget_PreviewDragOver(object sender, DragEventArgs e)
     {
-      object draggedItem = e.Data.GetData(this.format.Name);
+      object draggedItem = e.Data.GetData(GetInstanceId(sender as DependencyObject));
 
       DecideDropTarget(e);
       if (draggedItem != null)
@@ -230,7 +237,7 @@ namespace Lms.View.DataSelection.Pivot
 
     private void DropTarget_PreviewDrop(object sender, DragEventArgs e)
     {
-      object draggedItem = e.Data.GetData(this.format.Name);
+      object draggedItem = e.Data.GetData(GetInstanceId(sender as DependencyObject));
       int indexRemoved = -1;
 
       if (draggedItem != null)
@@ -259,7 +266,7 @@ namespace Lms.View.DataSelection.Pivot
     {
       // Dragged Adorner is only created once on DragEnter + every time we enter the window. 
       // It's only removed once on the DragDrop, and every time we leave the window. (so no need to remove it here)
-      object draggedItem = e.Data.GetData(this.format.Name);
+      object draggedItem = e.Data.GetData(GetInstanceId(sender as DependencyObject));
 
       if (draggedItem != null)
       {
@@ -278,7 +285,7 @@ namespace Lms.View.DataSelection.Pivot
     private void DecideDropTarget(DragEventArgs e)
     {
       int targetItemsControlCount = this.targetItemsControl.Items.Count;
-      object draggedItem = e.Data.GetData(this.format.Name);
+      object draggedItem = e.Data.GetData(GetInstanceId(this.targetItemsControl));
 
       if (IsDropDataTypeAllowed(draggedItem))
       {
