@@ -22,6 +22,8 @@
         </Border.Style>
         <StackPanel Orientation="Horizontal">
           <renamableControl:RenamableControl DataContext="{Binding Path=RenameObject}"/>
+          <TextBlock Text="{Binding Path=RenameObject.EditValidationMessage, Mode=OneWay}"/>
+          <CheckBox IsChecked="{Binding Path=RenameObject.EditIsValid, Mode=OneWay}"/>
           <Button Command="{Binding Path=ItemsSource.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" CommandParameter="{Binding}">X</Button>
           <ToggleButton IsChecked="{Binding Path=IsFavorite}" >fav</ToggleButton>
           <Button Command="{Binding Path=SaveCommand}">S</Button>
@@ -86,7 +88,7 @@
                                  Cursor="{Binding Path=IsRenamable, Converter={StaticResource BooleanToCursorConverter}}" />
             <TextBox x:Name="PART_TbEditText"
                      Visibility="Hidden"
-                     />
+                     Text="{Binding Path=EditName, UpdateSourceTrigger=PropertyChanged}" />
           </Grid>
         </ControlTemplate>
       </Setter.Value>

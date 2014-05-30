@@ -22,6 +22,8 @@ namespace ListManager.ViewModel
         }
         });
 
+      renameItem.RenameObject.Constraint = new MyConstraint();
+
       items = new ObservableCollection<Item>{
         new Item("Default", false){CanDelete = false},
         new Item("Item1", true),
@@ -43,7 +45,9 @@ namespace ListManager.ViewModel
     public ObservableCollection<Item> Items
     {
       get { return items; }
-      private set { items = value; }
+      set { items = value;
+      PropertyChanged(this, new PropertyChangedEventArgs("Items"));
+      }
     }
 
     public event PropertyChangedEventHandler PropertyChanged = delegate { };

@@ -1,9 +1,8 @@
 ﻿namespace Lms.ViewModel.Infrastructure.RenamableControl
 {
-  using System;
-  using System.Windows.Input;
-  using Microsoft.Practices.Prism.ViewModel;
   using Microsoft.Practices.Prism.Commands;
+  using Microsoft.Practices.Prism.ViewModel;
+  using System.Windows.Input;
 
   /// <summary>
   /// TODO: A generic ViewModel level object with a Property Name that can be bound to a View 
@@ -63,6 +62,24 @@
 
     }
 
+    private string editingName;
+
+    public string EditName
+    {
+      get { return editingName; }
+      set
+      {
+        if (!Equals(editingName, value))
+        {
+          editingName = value;
+          RaisePropertyChanged(()=>EditName);
+          RaisePropertyChanged(() => EditIsValid);
+          RaisePropertyChanged(() => EditValidationMessage);
+        }
+      }
+    }
+    
+
     private bool isRenamable;
 
     public bool IsRenamable
@@ -89,7 +106,26 @@
 
     public ICommand StartRenameCmd
     {
-      get; set;
+      get; 
+      set;
     }
+
+    public ModelI.Base.Constraint.IConstraint Constraint
+    {
+      get; 
+      set;
+    }
+
+    public bool EditIsValid
+    {
+      get { return Constraint != null ? Constraint.Validate(EditName).IsOk() : true; }
+    }
+
+    public string EditValidationMessage
+    {
+      get { return Constraint != null ? Constraint.Validate(EditName).Message : string.Empty; }
+    }
+    
+    
   }
 }

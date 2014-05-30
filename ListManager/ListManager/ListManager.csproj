@@ -56,8 +56,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\IConstraint.cs" />
+    <Compile Include="Model\ValidationResult.cs" />
     <Compile Include="ViewModel\Item.cs" />
     <Compile Include="ViewModel\MainWindow.cs" />
+    <Compile Include="ViewModel\MyConstraint.cs" />
     <Compile Include="ViewModel\RenamableNotificationObject.cs" />
     <Compile Include="View\BooleanToCursorConverter.cs" />
     <Compile Include="View\DragDropHelper.cs" />
@@ -111,9 +114,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
