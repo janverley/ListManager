@@ -117,9 +117,10 @@ namespace ListManager.View
         return externalItems.Contains(item) && item.CanDelete;
       }
 
-      private void OnAdd(string newName)
+      private bool OnAdd(string newName)
       {
         externalItems.Add(new Item(newName, true));
+        return true;
       }
 
       public void Dispose()

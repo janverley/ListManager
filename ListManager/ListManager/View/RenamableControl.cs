@@ -98,7 +98,7 @@
         var vm = DataContext as RenamableNotificationObject;
         if (vm.EditIsValid)
         {
-          vm.AcceptNewNameCmd.Execute(vm.EditName);
+          vm.AcceptNewName(vm.EditName);
 
           StopEditing();
           e.Handled = true;

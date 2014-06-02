@@ -1,8 +1,9 @@
 ﻿namespace Lms.ViewModel.Infrastructure.RenamableControl
 {
   using Microsoft.Practices.Prism.Commands;
-  using Microsoft.Practices.Prism.ViewModel;
-  using System.Windows.Input;
+using Microsoft.Practices.Prism.ViewModel;
+using System;
+using System.Windows.Input;
 
   /// <summary>
   /// TODO: A generic ViewModel level object with a Property Name that can be bound to a View 
@@ -13,16 +14,12 @@
   /// </summary>
   public class RenamableNotificationObject : NotificationObject
   {
-    public RenamableNotificationObject(string name, string defaultEditText, bool isRenamable)
+    public RenamableNotificationObject(string name, string defaultEditText, bool isRenamable, Func<string,bool> acceptNewName)
     {
       this.isRenamable = isRenamable;
       this.name = name;
       this.defaultEditText = defaultEditText;
-      AcceptNewNameCmd = new DelegateCommand<string>((newName) => 
-      { 
-        Name = newName; 
-        DefaultEditText = newName; 
-      });
+      this.acceptNewName = acceptNewName;
     }
 
     private string defaultEditText;
@@ -98,10 +95,15 @@
       }
     }
 
-    public ICommand AcceptNewNameCmd
+    private Func<string, bool> acceptNewName;
+    public void AcceptNewName(string newName)
     {
-      get;
-      set;
+      if (acceptNewName(newName))
+      {
+        Name = newName;
+        DefaultEditText = newName;
+      }
+      EditName = Name;
     }
 
     public ICommand StartRenameCmd
