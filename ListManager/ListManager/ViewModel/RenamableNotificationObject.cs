@@ -1,11 +1,9 @@
 ﻿namespace Lms.ViewModel.Infrastructure.RenamableControl
 {
-  using System;
-  using System.Windows.Input;
-  using Microsoft.Practices.Prism.ViewModel;
   using Microsoft.Practices.Prism.Commands;
-  using Lms.ModelI.Base.Constraint;
-  using System.Diagnostics;
+using Microsoft.Practices.Prism.ViewModel;
+using System;
+using System.Windows.Input;
 
   /// <summary>
   /// TODO: A generic ViewModel level object with a Property Name that can be bound to a View 
@@ -16,24 +14,12 @@
   /// </summary>
   public class RenamableNotificationObject : NotificationObject
   {
-    public RenamableNotificationObject(string name, string defaultEditText, bool isRenamable)
-      : this(name, defaultEditText, isRenamable, (_) => true, NoConstraint.Instance)
-    { }
-
-    public RenamableNotificationObject(string name, string defaultEditText, bool isRenamable, Func<string, bool> acceptNewName)
-      : this(name, defaultEditText, isRenamable, acceptNewName, NoConstraint.Instance)
-    { }
-
-    public RenamableNotificationObject(string name, string defaultEditText, bool isRenamable, Func<string, bool> acceptNewName, IConstraint constraint)
+    public RenamableNotificationObject(string name, string defaultEditText, bool isRenamable, Func<string,bool> acceptNewName)
     {
-      Debug.Assert(constraint.Validate(defaultEditText).IsOk());
-
-      EditName = defaultEditText;
       this.isRenamable = isRenamable;
       this.name = name;
       this.defaultEditText = defaultEditText;
       this.acceptNewName = acceptNewName;
-      Constraint = constraint;
     }
 
     private string defaultEditText;
@@ -67,29 +53,29 @@
         if (value != name)
         {
           name = value;
-
           RaisePropertyChanged(() => Name);
         }
       }
 
     }
 
-    private string editName = string.Empty;
+    private string editingName;
 
     public string EditName
     {
-      get { return editName; }
+      get { return editingName; }
       set
       {
-        if (!Equals(editName, value))
+        if (!Equals(editingName, value))
         {
-          editName = value;
-          RaisePropertyChanged(() => EditName);
+          editingName = value;
+          RaisePropertyChanged(()=>EditName);
           RaisePropertyChanged(() => EditIsValid);
           RaisePropertyChanged(() => EditValidationMessage);
         }
       }
     }
+    
 
     private bool isRenamable;
 
@@ -122,31 +108,26 @@
 
     public ICommand StartRenameCmd
     {
-      get;
+      get; 
       set;
     }
 
     public ModelI.Base.Constraint.IConstraint Constraint
     {
-      get;
-      private set;
+      get; 
+      set;
     }
-
 
     public bool EditIsValid
     {
-      get
-      {
-        return Constraint.Validate(EditName).IsOk();
-      }
+      get { return Constraint != null ? Constraint.Validate(EditName).IsOk() : true; }
     }
 
     public string EditValidationMessage
     {
-      get
-      {
-        return Constraint.Validate(EditName).Message;
-      }
+      get { return Constraint != null ? Constraint.Validate(EditName).Message : string.Empty; }
     }
+    
+    
   }
 }

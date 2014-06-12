@@ -96,10 +96,13 @@
       if (e.Key == Key.Return)
       {
         var vm = DataContext as RenamableNotificationObject;
-        vm.AcceptNewNameCmd.Execute(textBoxEditText.Text);
+        if (vm.EditIsValid)
+        {
+          vm.AcceptNewName(vm.EditName);
 
-        StopEditing();
-        e.Handled = true;
+          StopEditing();
+          e.Handled = true;
+        }
       }
       if (e.Key == Key.Escape)
       {
@@ -115,7 +118,7 @@
       Debug.Assert(IsRenamable);
 
       var vm = DataContext as RenamableNotificationObject;
-      textBoxEditText.Text = vm.DefaultEditText;
+      vm.EditName = vm.DefaultEditText;
 
       textBlockDisplayText.Visibility = Visibility.Hidden;
       textBoxEditText.Visibility = Visibility.Visible;

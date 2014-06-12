@@ -64,5 +64,11 @@ namespace ListManager
         ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;        
       }
     }
+    private void Button_Click_5(object sender, RoutedEventArgs e)
+    {
+      ViewModel.Items = new System.Collections.ObjectModel.ObservableCollection<Item>{
+        new Item("Item1", true)};
+
+    }
   }
 }
