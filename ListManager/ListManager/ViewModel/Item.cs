@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Input;
+using ListManager.ViewModelI;
 using Lms.ViewModel.Infrastructure.RenamableControl;
 using Microsoft.Practices.Prism.Commands;
 
 namespace ListManager.ViewModel
 {
-  public class Item : INotifyPropertyChanged
+  public class Item : INotifyPropertyChanged, IItem
   {
     public Item(string name, bool canRename)
       : this(name, canRename, (_) => true, null)
@@ -16,7 +17,7 @@ namespace ListManager.ViewModel
       : this(name, canRename, onSave, null)
     { }
 
-    public Item(string name, bool canRename, Func<Item, bool> onSave, Action<Item, string> onNewName)
+    public Item(string name, bool canRename, Func<Item, bool> onSave, Func<string, bool> acceptNewName)
     {
       saveCommand = new DelegateCommand(() =>
         {
@@ -25,12 +26,7 @@ namespace ListManager.ViewModel
 
       this.canRename = canRename;
 
-      RenameObject = new RenamableNotificationObject(name, name, false);
-      if (onNewName != null)
-      {
-        RenameObject.AcceptNewNameCmd = new DelegateCommand<string>((newName) =>
-          onNewName(this, newName));
-      }
+      RenameObject = new RenamableNotificationObject(name, name, false, acceptNewName);
     }
 
     public RenamableNotificationObject RenameObject { get; set; }

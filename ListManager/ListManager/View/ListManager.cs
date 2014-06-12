@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using ListManager.ViewModel;
+using ListManager.ViewModelI;
 using Microsoft.Practices.Prism.Commands;
 
 namespace ListManager.View
@@ -18,6 +19,17 @@ namespace ListManager.View
       ItemsSourceProperty.OverrideMetadata(typeof(ListManager), new FrameworkPropertyMetadata(OnItemsSourceChanged));
     }
 
+    public Func<string, bool> OnAdd
+    {
+      get { return (Func<string, bool>)GetValue(OnAddProperty); }
+      set { SetValue(OnAddProperty, value); }
+    }
+
+    // Using a DependencyProperty as the backing store for OnAdd.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty OnAddProperty =
+        DependencyProperty.Register("OnAdd", typeof(Func<string, bool>), typeof(ListManager), new PropertyMetadata(null));
+
+    
     public List InternalItems
     {
       get { return (List)GetValue(InternalItemsProperty); }
@@ -36,11 +48,11 @@ namespace ListManager.View
         lm.InternalItems.Dispose();
       }
 
-      lm.InternalItems = new List(e.NewValue as ObservableCollection<Item>);
+      lm.InternalItems = new List(e.NewValue as ObservableCollection<IItem>, lm.OnAdd);
 
     }
 
-    public class List : ObservableCollection<Item>, IDisposable
+    public class List : ObservableCollection<IItem>, IDisposable
     {
       protected override void RemoveItem(int index)
       {
@@ -54,7 +66,7 @@ namespace ListManager.View
         }
       }
 
-      protected override void InsertItem(int index, Item item)
+      protected override void InsertItem(int index, IItem item)
       {
         if (buildingInternalItems)
         {
@@ -67,13 +79,19 @@ namespace ListManager.View
         }
       }
 
-      public List(ObservableCollection<Item> externalItems)
+      public List(ObservableCollection<IItem> externalItems, Func<string, bool> onAddNewItem)
       {
         this.externalItems = externalItems;
-        deleteCommand = new DelegateCommand<Item>(Delete, CanDelete);
+        deleteCommand = new DelegateCommand<IItem>(Delete, CanDelete);
 
         BuildInternalItems();
         externalItems.CollectionChanged += externalItems_CollectionChanged;
+
+        placeHolder = new Item("Click to add...", true, (_) => true, onAddNewItem)
+        {
+          CanDelete = false
+        };
+        placeHolder.RenameObject.IsRenamable = true;
       }
 
       void externalItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -94,7 +112,7 @@ namespace ListManager.View
           Add(item);
         }
 
-        Add(new PlaceHolder(newName => OnAdd(newName)));
+        Add(placeHolder);
 
         if (Contains(currentSelectedItem))
         {
@@ -103,16 +121,18 @@ namespace ListManager.View
         buildingInternalItems = false;
       }
 
-      public ICommand DeleteCommand { get { return deleteCommand; } }
-      private DelegateCommand<Item> deleteCommand;
-      private ObservableCollection<Item> externalItems;
+      private Item placeHolder;
 
-      private void Delete(Item item)
+      public ICommand DeleteCommand { get { return deleteCommand; } }
+      private DelegateCommand<IItem> deleteCommand;
+      private ObservableCollection<IItem> externalItems;
+
+      private void Delete(IItem item)
       {
         externalItems.Remove(item);
       }
 
-      private bool CanDelete(Item item)
+      private bool CanDelete(IItem item)
       {
         return externalItems.Contains(item) && item.CanDelete;
       }
@@ -128,9 +148,9 @@ namespace ListManager.View
         SelectedItem = null;
       }
 
-      private Item selectedItem;
+      private IItem selectedItem;
 
-      public Item SelectedItem
+      public IItem SelectedItem
       {
         get { return selectedItem; }
         set

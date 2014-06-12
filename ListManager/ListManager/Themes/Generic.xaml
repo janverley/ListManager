@@ -80,13 +80,12 @@
         <ControlTemplate TargetType="renamableControl:RenamableControl">
           <Grid x:Name="PART_GridContainer">
             <TextBlock x:Name="PART_TbDisplayText"
-                      
+                                   
                                    Visibility="Visible"
-                                   Text="{Binding Path=Name}"
-                                 Cursor="{Binding Path=IsRenamable, Converter={StaticResource BooleanToCursorConverter}}" />
+                                   Text="{Binding Path=Name}" />
             <TextBox x:Name="PART_TbEditText"
                      Visibility="Hidden"
-                     />
+                     Text="{Binding Path=EditName, UpdateSourceTrigger=PropertyChanged}"/>
           </Grid>
         </ControlTemplate>
       </Setter.Value>
