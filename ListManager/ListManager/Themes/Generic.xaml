@@ -1,5 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    
                     xmlns:v="clr-namespace:ListManager.View"
+                    xmlns:v2="clr-namespace:Lms.View.Infrastructure"
         xmlns:v1="clr-namespace:Lms.View.DataSelection.Pivot"
                     xmlns:vm="clr-namespace:ListManager.ViewModel"
                     xmlns:renamableControl="clr-namespace:Lms.View.Infrastructure.RenamableControl"
@@ -8,39 +10,8 @@
 
   <v:BooleanToCursorConverter x:Key="BooleanToCursorConverter"/>
 
-  <DataTemplate DataType="{x:Type vm:Item}">
-    <Border x:Name="DragBorder">
-      <Border.Style>
-        <Style TargetType="{x:Type Border}">
-          <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-      </Border.Style><Border x:Name="IsCurrentBorder">
-        <Border.Style>
-          <Style TargetType="{x:Type Border}">
-            <Setter Property="Background" Value="Transparent"/>
-          </Style>
-        </Border.Style>
-        <StackPanel Orientation="Horizontal">
-          <renamableControl:RenamableControl DataContext="{Binding Path=RenameObject}"/>
-          <TextBlock Text="{Binding Path=RenameObject.EditValidationMessage, Mode=OneWay}"/>
-          <CheckBox IsChecked="{Binding Path=RenameObject.EditIsValid, Mode=OneWay}"/>
-          <Button Command="{Binding Path=ItemsSource.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" CommandParameter="{Binding}">X</Button>
-          <ToggleButton IsChecked="{Binding Path=IsFavorite}" >fav</ToggleButton>
-          <Button Command="{Binding Path=SaveCommand}">S</Button>
-        </StackPanel>
-      </Border>
-    </Border>
-    <DataTemplate.Triggers>
-      <DataTrigger Binding="{Binding Path=IsCurrent}" Value="True">
-        <Setter TargetName="IsCurrentBorder" Property="Background" Value="LightBlue"/>
-      </DataTrigger>
-      <Trigger  SourceName="DragBorder" Property="IsMouseOver" Value="True">
-        <Setter TargetName="DragBorder" Property="BorderBrush" Value="LightGray"/>
-      </Trigger>
-    </DataTemplate.Triggers>
-  </DataTemplate>
 
-  <DataTemplate DataType="{x:Type vm:PlaceHolder}">
+  <DataTemplate DataType="{x:Type v2:Placeholder}">
     <StackPanel Orientation="Horizontal"
                 >
       <renamableControl:RenamableControl DataContext="{Binding Path=RenameObject}"/>
@@ -59,10 +30,10 @@
     </Setter>
   </Style>
 
-  <Style TargetType="{x:Type v:ListManager}">
+  <Style TargetType="{x:Type v2:ListManager}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="v:ListManager">
+        <ControlTemplate TargetType="v2:ListManager">
           <ListBox
             v1:DragDropHelper.IsDragSource="True"
             v1:DragDropHelper.IsDropTarget="True"

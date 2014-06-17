@@ -13,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Lms.ViewModel.Infrastructure;
+using Lms.ViewModelI.Infrastructure;
 
 namespace ListManager
 {
@@ -35,23 +37,23 @@ namespace ListManager
 
     private void Button_Click(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items.Add(new Item("added", true));
+      ViewModel.ManagedList.Items.Add(new MyItem("added", true));
     }
 
     private void Button_Click_1(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items.RemoveAt(1);
+      ViewModel.ManagedList.Items.RemoveAt(1);
     }
 
     private void Button_Click_2(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items[1].IsFavorite = !ViewModel.Items[1].IsFavorite;
+      //ViewModel.Items[1].IsFavorite = !ViewModel.Items[1].IsFavorite;
 
     }
 
     private void Button_Click_3(object sender, RoutedEventArgs e)
     {
-      foreach (var item in ViewModel.Items)
+      foreach (var item in ViewModel.ManagedList.Items)
       {
         item.IsCurrent = false;
       }
@@ -59,15 +61,17 @@ namespace ListManager
 
     private void Button_Click_4(object sender, RoutedEventArgs e)
     {
-      if (ViewModel.Items.Any(i => i.IsCurrent))
+      if (ViewModel.ManagedList.Items.Any(i => i.IsCurrent))
       {
-        ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;        
+       // ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;        
       }
     }
     private void Button_Click_5(object sender, RoutedEventArgs e)
     {
-      ViewModel.Items = new System.Collections.ObjectModel.ObservableCollection<Item>{
-        new Item("Item1", true)};
+      ViewModel.ManagedList = new MyManagedList();
+
+        //new System.Collections.ObjectModel.ObservableCollection<IItem>{
+        //new MyItem("Item1", true)};
 
     }
   }

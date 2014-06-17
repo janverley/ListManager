@@ -5,93 +5,94 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
-using ListManager.ViewModel;
-using ListManager.ViewModelI;
 using Microsoft.Practices.Prism.Commands;
+using Lms.ViewModel.Infrastructure;
+using Lms.ViewModelI.Infrastructure;
+using Lms.ViewModel.Infrastructure.RenamableControl;
+using Lms.ModelI.Base.Constraint;
 
-namespace ListManager.View
+namespace Lms.View.Infrastructure
 {
   public class ListManager : Selector
   {
     static ListManager()
     {
       DefaultStyleKeyProperty.OverrideMetadata(typeof(ListManager), new FrameworkPropertyMetadata(typeof(ListManager)));
-      ItemsSourceProperty.OverrideMetadata(typeof(ListManager), new FrameworkPropertyMetadata(OnItemsSourceChanged));
     }
 
-    public Func<string, bool> OnAdd
+
+
+    public IManagedList ManagedList
     {
-      get { return (Func<string, bool>)GetValue(OnAddProperty); }
-      set { SetValue(OnAddProperty, value); }
+      get { return (IManagedList)GetValue(ManagedListProperty); }
+      set { SetValue(ManagedListProperty, value); }
     }
 
-    // Using a DependencyProperty as the backing store for OnAdd.  This enables animation, styling, binding, etc...
-    public static readonly DependencyProperty OnAddProperty =
-        DependencyProperty.Register("OnAdd", typeof(Func<string, bool>), typeof(ListManager), new PropertyMetadata(null));
+    // Using a DependencyProperty as the backing store for ManagedList.  This enables animation, styling, binding, etc...
+    public static readonly DependencyProperty ManagedListProperty =
+        DependencyProperty.Register("ManagedList", typeof(IManagedList), typeof(ListManager), new PropertyMetadata(OnManagedListChanged));
 
-    
-    public List InternalItems
+
+    public InternalItemList InternalItems
     {
-      get { return (List)GetValue(InternalItemsProperty); }
+      get { return (InternalItemList)GetValue(InternalItemsProperty); }
       set { SetValue(InternalItemsProperty, value); }
     }
 
     public static readonly DependencyProperty InternalItemsProperty =
-        DependencyProperty.Register("InternalItems", typeof(List), typeof(ListManager), new PropertyMetadata(null));
+        DependencyProperty.Register("InternalItems", typeof(InternalItemList), typeof(ListManager), new PropertyMetadata(null));
 
-    private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    private static void OnManagedListChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      var lm = d as ListManager;
-
-      if (lm.InternalItems != null)
+      var managedList = e.NewValue as IManagedList;
+      if (managedList != null)
       {
-        lm.InternalItems.Dispose();
+
+        var lm = d as ListManager;
+
+        if (lm.InternalItems != null)
+        {
+          lm.InternalItems.Dispose();
+        }
+
+        lm.InternalItems = new InternalItemList(managedList);
       }
-
-      lm.InternalItems = new List(e.NewValue as ObservableCollection<IItem>, lm.OnAdd);
-
     }
 
-    public class List : ObservableCollection<IItem>, IDisposable
+    public class InternalItemList : ObservableCollection<IItem>, IDisposable
     {
-      protected override void RemoveItem(int index)
-      {
-        if (buildingInternalItems)
-        {
-          base.RemoveItem(index);
-        }
-        else
-        {
-          externalItems.RemoveAt(index);
-        }
-      }
+      //protected override void RemoveItem(int index)
+      //{
+      //  if (buildingInternalItems)
+      //  {
+      //    base.RemoveItem(index);
+      //  }
+      //  else
+      //  {
+      //    externalItems.RemoveAt(index);
+      //  }
+      //}
 
-      protected override void InsertItem(int index, IItem item)
-      {
-        if (buildingInternalItems)
-        {
-          base.InsertItem(index, item);
-        }
-        else
-        {
-          SelectedItem = item; // Selection was lost when the item was removed
-          externalItems.Insert(index, item);
-        }
-      }
+      //protected override void InsertItem(int index, Item item)
+      //{
+      //  if (buildingInternalItems)
+      //  {
+      //    base.InsertItem(index, item);
+      //  }
+      //  else
+      //  {
+      //    SelectedItem = item; // Selection was lost when the item was removed
+      //    externalItems.Insert(index, item);
+      //  }
+      //}
 
-      public List(ObservableCollection<IItem> externalItems, Func<string, bool> onAddNewItem)
+      public InternalItemList(IManagedList managedList)
       {
-        this.externalItems = externalItems;
+        this.managedList = managedList;
         deleteCommand = new DelegateCommand<IItem>(Delete, CanDelete);
 
         BuildInternalItems();
-        externalItems.CollectionChanged += externalItems_CollectionChanged;
-
-        placeHolder = new Item("Click to add...", true, (_) => true, onAddNewItem)
-        {
-          CanDelete = false
-        };
-        placeHolder.RenameObject.IsRenamable = true;
+        this.managedList.Items.CollectionChanged += externalItems_CollectionChanged;
       }
 
       void externalItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -99,53 +100,56 @@ namespace ListManager.View
         BuildInternalItems();
       }
 
-      private bool buildingInternalItems = false;
-
       private void BuildInternalItems()
       {
-        buildingInternalItems = true;
         var currentSelectedItem = SelectedItem;
         Clear();
 
-        foreach (var item in externalItems)
+        foreach (var item in managedList.Items)
         {
           Add(item);
         }
 
-        Add(placeHolder);
+        Add(new Placeholder((newName) =>
+          {
+            var newItem = managedList.Factory(newName);
+
+            if (newItem != null)
+            {
+              managedList.Items.Add(newItem);
+            }
+            return newItem != null;
+          }, managedList.Constraint));
 
         if (Contains(currentSelectedItem))
         {
           SelectedItem = currentSelectedItem;
         }
-        buildingInternalItems = false;
       }
-
-      private Item placeHolder;
 
       public ICommand DeleteCommand { get { return deleteCommand; } }
       private DelegateCommand<IItem> deleteCommand;
-      private ObservableCollection<IItem> externalItems;
+      private IManagedList managedList;
 
       private void Delete(IItem item)
       {
-        externalItems.Remove(item);
+        managedList.Items.Remove(item);
       }
 
       private bool CanDelete(IItem item)
       {
-        return externalItems.Contains(item) && item.CanDelete;
+        return managedList.Items.Contains(item) && item.CanDelete;
       }
 
-      private bool OnAdd(string newName)
-      {
-        externalItems.Add(new Item(newName, true));
-        return true;
-      }
+      //private bool OnAdd(string newName)
+      //{
+      //  externalItems.Add(new Item(newName, true));
+      //  return true;
+      //}
 
       public void Dispose()
       {
-        externalItems.CollectionChanged -= externalItems_CollectionChanged;
+        managedList.Items.CollectionChanged -= externalItems_CollectionChanged;
         SelectedItem = null;
       }
 

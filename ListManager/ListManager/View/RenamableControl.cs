@@ -5,7 +5,6 @@
   using System.Windows.Input;
   //using Microsoft.Practices.Prism.Commands;
   using System.Diagnostics;
-  using ListManager.ViewModel;
   using Lms.ViewModel.Infrastructure.RenamableControl;
   using Microsoft.Practices.Prism.Commands;
 

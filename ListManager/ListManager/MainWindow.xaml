@@ -2,10 +2,44 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:v="clr-namespace:ListManager.View"
         xmlns:v1="clr-namespace:Lms.View.DataSelection.Pivot"
-        xmlns:vm="clr-namespace:ListManager.ViewModel"
+                    xmlns:v2="clr-namespace:Lms.View.Infrastructure"
+        xmlns:renamableControl="clr-namespace:Lms.View.Infrastructure.RenamableControl"
+                    xmlns:vm="clr-namespace:ListManager.ViewModel"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="350" Width="525">
   <Window.Resources>
+    <DataTemplate DataType="{x:Type vm:MyItem}">
+      <Border x:Name="DragBorder">
+        <Border.Style>
+          <Style TargetType="{x:Type Border}">
+            <Setter Property="BorderThickness" Value="1"/>
+          </Style>
+        </Border.Style>
+        <Border x:Name="IsCurrentBorder">
+          <Border.Style>
+            <Style TargetType="{x:Type Border}">
+              <Setter Property="Background" Value="Transparent"/>
+            </Style>
+          </Border.Style>
+          <StackPanel Orientation="Horizontal">
+            <renamableControl:RenamableControl DataContext="{Binding Path=RenameObject}"/>
+            <TextBlock Text="{Binding Path=RenameObject.EditValidationMessage, Mode=OneWay}"/>
+            <CheckBox IsChecked="{Binding Path=RenameObject.EditIsValid, Mode=OneWay}"/>
+            <Button Command="{Binding Path=ItemsSource.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ListBox}}}" CommandParameter="{Binding}">X</Button>
+            <ToggleButton IsChecked="{Binding Path=IsFavorite}" >fav</ToggleButton>
+            <Button Command="{Binding Path=SaveCommand}">S</Button>
+          </StackPanel>
+        </Border>
+      </Border>
+      <DataTemplate.Triggers>
+        <DataTrigger Binding="{Binding Path=IsCurrent}" Value="True">
+          <Setter TargetName="IsCurrentBorder" Property="Background" Value="LightBlue"/>
+        </DataTrigger>
+        <Trigger  SourceName="DragBorder" Property="IsMouseOver" Value="True">
+          <Setter TargetName="DragBorder" Property="BorderBrush" Value="LightGray"/>
+        </Trigger>
+      </DataTemplate.Triggers>
+    </DataTemplate>
 
   </Window.Resources>
   <Grid>
@@ -19,10 +53,10 @@
       
     <ListBox
       Focusable="False"
-      ItemsSource="{Binding Path=Items}"
+      ItemsSource="{Binding Path=ManagedList.Items}"
       >
         <ListBox.ItemTemplate>
-          <DataTemplate DataType="vm:Item">
+          <DataTemplate DataType="vm:MyItem">
             <StackPanel Orientation="Horizontal">
               <TextBlock Text="{Binding Path=RenameObject.Name}"/>
               <TextBlock Text=" C: "/>
@@ -46,9 +80,9 @@
       <Button Click="Button_Click_5">replace External Observable Collection</Button>
     </StackPanel>
 
-    <v:ListManager
+    <v2:ListManager
       Grid.Column="1"
-      ItemsSource="{Binding Path=Items}"/>
+      ManagedList="{Binding Path=ManagedList}"/>
 
   </Grid>
 </Window>

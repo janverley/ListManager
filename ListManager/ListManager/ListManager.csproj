@@ -58,15 +58,20 @@
     </ApplicationDefinition>
     <Compile Include="Model\IConstraint.cs" />
     <Compile Include="Model\ValidationResult.cs" />
+    <Compile Include="ViewModelI\IItem.cs" />
+    <Compile Include="ViewModelI\IManagedList.cs" />
     <Compile Include="ViewModel\Item.cs" />
     <Compile Include="ViewModel\MainWindow.cs" />
     <Compile Include="ViewModel\MyConstraint.cs" />
+    <Compile Include="ViewModel\MyItem.cs" />
+    <Compile Include="ViewModel\MyManagedList.cs" />
+    <Compile Include="ViewModel\NoConstraint.cs" />
     <Compile Include="ViewModel\RenamableNotificationObject.cs" />
     <Compile Include="View\BooleanToCursorConverter.cs" />
     <Compile Include="View\DragDropHelper.cs" />
     <Compile Include="View\InsertionAdorner.cs" />
     <Compile Include="View\ListManager.cs" />
-    <Compile Include="ViewModel\PlaceHolder.cs" />
+    <Compile Include="View\Placeholder.cs" />
     <Compile Include="View\RenamableControl.cs" />
     <Compile Include="View\Utilities.cs" />
     <Page Include="MainWindow.xaml">
