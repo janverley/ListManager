@@ -116,6 +116,15 @@ namespace Lms.View.Infrastructure
 
             if (newItem != null)
             {
+              if (newItem.IsCurrent)
+              {
+                foreach (var item in managedList.Items)
+                {
+                  item.IsCurrent = false;
+                }
+                currentSelectedItem = null;
+                SelectedItem = newItem;
+              }
               managedList.Items.Add(newItem);
             }
             return newItem != null;

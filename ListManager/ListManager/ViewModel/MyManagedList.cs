@@ -50,7 +50,7 @@ namespace ListManager.ViewModel
 
     public Func<string, IItem> Factory
     {
-      get { return (newname) => new MyItem(newname,true); }
+      get { return (newname) => new MyItem(newname, true) { IsCurrent = newname.Contains('n')}; }
     }
   }
 }
