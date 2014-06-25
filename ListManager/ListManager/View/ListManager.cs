@@ -126,6 +126,7 @@ namespace Lms.View.Infrastructure
                 SelectedItem = newItem;
               }
               managedList.Items.Add(newItem);
+              managedList.OnAddItem(newItem);
             }
             return newItem != null;
           }, managedList.Constraint));
@@ -143,6 +144,7 @@ namespace Lms.View.Infrastructure
       private void Delete(IItem item)
       {
         managedList.Items.Remove(item);
+        managedList.OnDeleteItem(item);
       }
 
       private bool CanDelete(IItem item)

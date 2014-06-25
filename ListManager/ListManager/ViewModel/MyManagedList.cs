@@ -52,5 +52,16 @@ namespace ListManager.ViewModel
     {
       get { return (newname) => new MyItem(newname, true) { IsCurrent = newname.Contains('n')}; }
     }
+
+
+    public void OnAddItem(IItem item)
+    {
+
+    }
+
+    public void OnDeleteItem(IItem item)
+    {
+
+    }
   }
 }
