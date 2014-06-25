@@ -66,13 +66,23 @@ namespace ListManager
        // ViewModel.Items.First(i => i.IsCurrent).IsDirty = true;        
       }
     }
+
     private void Button_Click_5(object sender, RoutedEventArgs e)
     {
       ViewModel.ManagedList = new MyManagedList();
 
-        //new System.Collections.ObjectModel.ObservableCollection<IItem>{
-        //new MyItem("Item1", true)};
+      //new System.Collections.ObjectModel.ObservableCollection<IItem>{
+      //new MyItem("Item1", true)};
 
     }
+    private void Button_Click_6(object sender, RoutedEventArgs e)
+    {
+      ViewModel.ManagedList.Items.First().IsCurrent = true;
+    }
+    private void Button_Click_7(object sender, RoutedEventArgs e)
+    {
+      ViewModel.ManagedList.Items[1].IsCurrent = true;
+    }
+
   }
 }

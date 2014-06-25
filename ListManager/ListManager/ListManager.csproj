@@ -60,6 +60,7 @@
     <Compile Include="Model\ValidationResult.cs" />
     <Compile Include="ViewModelI\IItem.cs" />
     <Compile Include="ViewModelI\IManagedList.cs" />
+    <Compile Include="ViewModelI\ItemCollection.cs" />
     <Compile Include="ViewModel\Item.cs" />
     <Compile Include="ViewModel\MainWindow.cs" />
     <Compile Include="ViewModel\MyConstraint.cs" />

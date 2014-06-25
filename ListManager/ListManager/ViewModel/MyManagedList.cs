@@ -21,7 +21,7 @@ namespace ListManager.ViewModel
         );
       var renameItem = new MyItem("Rename Me!", "This will need confirmation", true, null, acceptNewName, new MyConstraint());
 
-      Items = new ObservableCollection<IItem>{
+      Items = new ItemCollection( new[]{
         new MyItem("Default", false){CanDelete = false},
         new MyItem("Item1", true),
         new MyItem("Save Me!", "Save Me!", true, (item) => 
@@ -34,10 +34,10 @@ namespace ListManager.ViewModel
         renameItem,
 
         new MyItem("Item1", true),
-      };
+      });
     }
 
-    public System.Collections.ObjectModel.ObservableCollection<IItem> Items
+    public ItemCollection Items
     {
       get;
       private set;
