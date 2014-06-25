@@ -121,7 +121,7 @@ namespace ListManager.ViewModel
     public string Name
     {
       get { return RenameObject.Name; }
-      set { RenameObject.Name = value; }
+      //set { RenameObject.Name = value; }
     }
 
     public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged = delegate { };

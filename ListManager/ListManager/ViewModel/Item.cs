@@ -27,7 +27,7 @@ namespace Lms.ViewModel.Infrastructure
     public string Name
     {
       get { return RenameObject.Name; }
-      set { RenameObject.Name = value; }
+      //set { RenameObject.Name = value; }
     }
 
     private bool canRename;

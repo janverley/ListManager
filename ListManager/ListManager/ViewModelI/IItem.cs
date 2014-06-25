@@ -10,7 +10,7 @@ namespace Lms.ViewModelI.Infrastructure
     bool IsCurrent { get; set; }
     bool IsDirty { get; }
     bool IsFavorite { get; }
-    string Name { get; set; }
+    string Name { get; }
     ICommand SaveCommand { get; }
 
   }
