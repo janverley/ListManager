@@ -7,7 +7,7 @@
   public class ItemCollection : ObservableCollection<IItem>
   {
     public ItemCollection()
-      :base()
+      : base()
     {
     }
 

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using Lms.ModelI.Base.Constraint;
-
-namespace Lms.ViewModelI.Infrastructure
+﻿namespace Lms.ViewModelI.Infrastructure
 {
+  using System;
+  using Lms.ModelI.Base.Constraint;
+
   public interface IManagedList
   {
     ItemCollection Items { get; }
