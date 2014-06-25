@@ -1,14 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Lms.ViewModelI.Infrastructure
+﻿namespace Lms.ViewModelI.Infrastructure
 {
+  using System.Collections.Generic;
+  using System.Collections.ObjectModel;
+  using System.ComponentModel;
+
   public class ItemCollection : ObservableCollection<IItem>
   {
+    public ItemCollection()
+      :base()
+    {
+    }
+
     public ItemCollection(IEnumerable<IItem> items)
       : base(items)
     {
@@ -18,7 +20,7 @@ namespace Lms.ViewModelI.Infrastructure
       }
     }
 
-    void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    void item_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
       if (e.PropertyName.Equals("IsCurrent"))
       {
@@ -49,6 +51,8 @@ namespace Lms.ViewModelI.Infrastructure
     {
       base.InsertItem(index, item);
       item.PropertyChanged += item_PropertyChanged;
+
+      item_PropertyChanged(item, new PropertyChangedEventArgs("IsCurrent"));
     }
 
     protected override void RemoveItem(int index)
